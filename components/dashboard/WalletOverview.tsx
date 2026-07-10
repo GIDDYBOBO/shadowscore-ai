@@ -1,52 +1,45 @@
 "use client";
 
-import Card from "@/components/ui/Card";
-import useWalletData from "@/hooks/useWalletData";
-import { useAccount } from "wagmi";
+import { useAccount, useBalance } from "wagmi";
 
 export default function WalletOverview() {
-  const { wallet, loading } = useWalletData();
-  const { address } = useAccount();
+  const { address, chain } = useAccount();
+
+  const { data, isLoading } = useBalance({
+    address,
+  });
 
   return (
-    <Card title="Wallet Overview">
-      <div className="space-y-5">
+    <div className="rounded-2xl border border-white/10 bg-zinc-900 p-8">
+      <h2 className="text-xl font-semibold text-white">
+        Wallet Overview
+      </h2>
 
+      <div className="mt-6 space-y-5">
         <div>
-          <p className="text-sm text-zinc-500">Address</p>
-
-          <p className="mt-1 font-mono text-sm text-white break-all">
-            {address ?? "--"}
+          <p className="text-zinc-500 text-sm">Address</p>
+          <p className="font-mono text-white break-all">
+            {address ?? "Not Connected"}
           </p>
         </div>
 
         <div>
-          <p className="text-sm text-zinc-500">ETH Balance</p>
+          <p className="text-zinc-500 text-sm">Network</p>
+          <p className="text-white">
+            {chain?.name ?? "--"}
+          </p>
+        </div>
 
-          <p className="mt-1 text-lg font-semibold text-white">
-            {loading || !wallet
+        <div>
+          <p className="text-zinc-500 text-sm">Balance</p>
+
+          <p className="text-white">
+            {isLoading
               ? "Loading..."
-              : `${wallet.ethBalance.toFixed(4)} ETH`}
+              : `${data?.formatted ?? "0"} ${data?.symbol ?? ""}`}
           </p>
         </div>
-
-        <div className="flex justify-between">
-          <span className="text-zinc-500">Tokens</span>
-
-          <span className="text-white">
-            {loading || !wallet ? "--" : wallet.tokenCount}
-          </span>
-        </div>
-
-        <div className="flex justify-between">
-          <span className="text-zinc-500">NFTs</span>
-
-          <span className="text-white">
-            {loading || !wallet ? "--" : wallet.nftCount}
-          </span>
-        </div>
-
       </div>
-    </Card>
+    </div>
   );
 }
