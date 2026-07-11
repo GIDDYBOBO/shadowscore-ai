@@ -1,60 +1,54 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import useAnalysis from "@/hooks/useAnalysis";
 
 const steps = [
-  "Reading wallet information...",
-  "Checking ETH balance...",
-  "Analyzing transaction patterns...",
-  "Evaluating wallet reputation...",
-  "Running security scan...",
-  "Generating AI report...",
+  "Reading Wallet...",
+  "Fetching Balance...",
+  "Analyzing Reputation...",
+  "Checking Security...",
+  "Building AI Report...",
 ];
 
 export default function ScanAnimation() {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [finished, setFinished] = useState(false);
+  const { loading, finished } = useAnalysis();
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentStep((prev) => {
-        if (prev === steps.length - 1) {
-          clearInterval(timer);
-          setFinished(true);
-          return prev;
-        }
-        return prev + 1;
-      });
-    }, 700);
+  if (!loading && !finished) {
+    return (
+      <div className="rounded-2xl border border-white/10 bg-zinc-900 p-8">
+        <h2 className="text-xl font-bold text-white">
+          Shadow Scanner
+        </h2>
 
-    return () => clearInterval(timer);
-  }, []);
+        <p className="mt-6 text-zinc-400">
+          Connect your wallet to begin AI analysis.
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="rounded-2xl border border-cyan-500/20 bg-zinc-900 p-8">
-      <h2 className="text-2xl font-bold text-white">
-        Shadow AI Scanner
+    <div className="rounded-2xl border border-white/10 bg-zinc-900 p-8">
+
+      <h2 className="text-xl font-bold text-white">
+        Shadow Scanner
       </h2>
 
       <div className="mt-8 space-y-4">
         {steps.map((step, index) => (
           <div
             key={step}
-            className={`flex items-center gap-3 ${
-              index <= currentStep
-                ? "text-cyan-400"
-                : "text-zinc-500"
-            }`}
+            className="flex items-center gap-3 text-cyan-400"
           >
-            {index < currentStep ? "✅" : index === currentStep ? "⏳" : "○"}
-            <span>{step}</span>
+            {finished ? "✅" : "⏳"}
+            {step}
           </div>
         ))}
       </div>
 
       {finished && (
-        <div className="mt-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-4 text-emerald-400 font-semibold">
-          Analysis Complete
+        <div className="mt-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-4 text-emerald-400">
+          Analysis Completed Successfully
         </div>
       )}
     </div>
