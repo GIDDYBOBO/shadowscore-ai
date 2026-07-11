@@ -1,58 +1,28 @@
 export interface WalletMetrics {
-  walletAge: number;
+  balance: number;
   transactionCount: number;
   tokenCount: number;
   chainCount: number;
-  hasSuspiciousActivity: boolean;
+  walletAgeDays: number;
 }
 
-export interface ScoreResult {
-  score: number;
-  rating: string;
-  color: string;
-}
+export function calculateShadowScore(metrics: WalletMetrics) {
+  let score = 300;
 
-export function calculateShadowScore(
-  metrics: WalletMetrics
-): ScoreResult {
-  let score = 500;
+  // Wallet age (max 200)
+  score += Math.min(metrics.walletAgeDays / 365, 4) * 50;
 
-  // Wallet age
-  score += Math.min(metrics.walletAge * 40, 200);
+  // Transactions (max 200)
+  score += Math.min(metrics.transactionCount / 1000, 2) * 100;
 
-  // Transaction history
-  score += Math.min(metrics.transactionCount / 20, 150);
+  // Token diversity (max 150)
+  score += Math.min(metrics.tokenCount * 10, 150);
 
-  // Token diversity
-  score += Math.min(metrics.tokenCount * 8, 60);
+  // Multi-chain activity (max 100)
+  score += Math.min(metrics.chainCount * 25, 100);
 
-  // Multi-chain activity
-  score += metrics.chainCount * 20;
+  // Balance (max 250)
+  score += Math.min(metrics.balance * 20, 250);
 
-  // Risk penalty
-  if (metrics.hasSuspiciousActivity) {
-    score -= 250;
-  }
-
-  score = Math.max(0, Math.min(score, 1000));
-
-  let rating = "Poor";
-  let color = "text-red-500";
-
-  if (score >= 850) {
-    rating = "Excellent";
-    color = "text-emerald-400";
-  } else if (score >= 700) {
-    rating = "Good";
-    color = "text-green-400";
-  } else if (score >= 500) {
-    rating = "Average";
-    color = "text-yellow-400";
-  }
-
-  return {
-    score,
-    rating,
-    color,
-  };
+  return Math.round(Math.min(score, 1000));
 }

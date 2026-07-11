@@ -1,58 +1,69 @@
 "use client";
 
-import Card from "@/components/ui/Card";
-import { CheckCircle2, AlertTriangle, Clock } from "lucide-react";
-
-const checks = [
-  {
-    icon: CheckCircle2,
-    color: "text-emerald-400",
-    title: "Wallet Security",
-    value: "Excellent",
-  },
-  {
-    icon: Clock,
-    color: "text-cyan-400",
-    title: "Wallet Age",
-    value: "3.2 Years",
-  },
-  {
-    icon: AlertTriangle,
-    color: "text-yellow-400",
-    title: "Risk Level",
-    value: "Low",
-  },
-];
+import useReputation from "@/hooks/useReputation";
 
 export default function WalletHealth() {
+  const rep = useReputation();
+
   return (
-    <Card title="Wallet Intelligence">
-      <div className="space-y-5">
-        {checks.map((item) => {
-          const Icon = item.icon;
+    <div className="rounded-2xl border border-white/10 bg-zinc-900 p-8">
 
-          return (
+      <h2 className="text-xl font-semibold text-white">
+        Wallet Health
+      </h2>
+
+      <div className="mt-8 space-y-6">
+
+        <div>
+          <div className="flex justify-between">
+            <span className="text-zinc-400">
+              Reputation
+            </span>
+
+            <span className="text-white">
+              {rep.score}/1000
+            </span>
+          </div>
+
+          <div className="mt-2 h-3 rounded-full bg-zinc-800">
+
             <div
-              key={item.title}
-              className="flex items-center justify-between rounded-xl border border-white/5 bg-zinc-950 p-4"
-            >
-              <div className="flex items-center gap-3">
-                <Icon className={item.color} size={22} />
+              className="h-full rounded-full bg-cyan-500 transition-all duration-1000"
+              style={{
+                width: `${rep.score / 10}%`,
+              }}
+            />
 
-                <div>
-                  <p className="text-sm text-zinc-500">
-                    {item.title}
-                  </p>
+          </div>
 
-                  <p className="font-semibold text-white">
-                    {item.value}
-                  </p>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        </div>
+
+        <div>
+          <div className="flex justify-between">
+            <span className="text-zinc-400">
+              Security
+            </span>
+
+            <span className="text-white">
+              {100 - rep.risk}%
+            </span>
+          </div>
+
+          <div className="mt-2 h-3 rounded-full bg-zinc-800">
+
+            <div
+              className="h-full rounded-full bg-emerald-500 transition-all duration-1000"
+              style={{
+                width: `${100 - rep.risk}%`,
+              }}
+            />
+
+          </div>
+
+        </div>
+
       </div>
-    </Card>
+
+    </div>
   );
 }

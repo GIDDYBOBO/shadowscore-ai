@@ -1,9 +1,20 @@
 "use client";
 
-import { useAccount } from "wagmi";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useEffect, useState } from "react";
 
 export default function Topbar() {
-  const { address, chain } = useAccount();
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    setTime(new Date().toLocaleTimeString());
+
+    const interval = setInterval(() => {
+      setTime(new Date().toLocaleTimeString());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <header className="flex items-center justify-between border-b border-white/10 bg-zinc-950 px-8 py-5">
@@ -15,23 +26,17 @@ export default function Topbar() {
         <p className="text-sm text-zinc-500">
           AI-powered blockchain intelligence
         </p>
-      </div>
 
-      <div className="rounded-xl border border-white/10 bg-zinc-900 px-4 py-3">
-        <p className="text-xs text-zinc-500">
-          Connected Wallet
-        </p>
-
-        <p className="font-mono text-sm text-white">
-          {address
-            ? `${address.slice(0, 6)}...${address.slice(-4)}`
-            : "Not Connected"}
-        </p>
-
-        <p className="text-xs text-emerald-400">
-          {chain?.name ?? "--"}
+        <p className="mt-2 text-xs text-zinc-400">
+          Last Scan: {time || "--:--:--"}
         </p>
       </div>
+
+      <ConnectButton
+        accountStatus="address"
+        chainStatus="icon"
+        showBalance={false}
+      />
     </header>
   );
 }

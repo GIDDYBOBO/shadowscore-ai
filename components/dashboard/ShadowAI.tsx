@@ -1,38 +1,61 @@
 "use client";
 
-import Card from "@/components/ui/Card";
-import useWalletAnalysis from "@/hooks/useWalletAnalysis";
+import { useState } from "react";
+
+const suggestions = [
+  "How can I improve my reputation?",
+  "Is this wallet safe?",
+  "Explain my reputation score.",
+  "What should I do next?",
+];
 
 export default function ShadowAI() {
-  const { analysis, loading } = useWalletAnalysis();
+  const [question, setQuestion] = useState("");
+
+  const answer = question
+    ? `Based on your wallet activity, your reputation is healthy. Continue using trusted protocols, avoid interacting with malicious contracts, and maintain consistent on-chain activity to improve your ShadowScore.`
+    : "Ask Shadow AI anything about your wallet.";
 
   return (
-    <Card title="Shadow AI">
+    <div className="rounded-2xl border border-white/10 bg-zinc-900 p-8">
+      <h2 className="text-xl font-semibold text-white">
+        Shadow AI Copilot
+      </h2>
 
-      {loading ? (
-        <p className="text-zinc-400">Analyzing wallet...</p>
-      ) : (
-        <div className="space-y-4">
+      <p className="mt-2 text-sm text-zinc-500">
+        AI-powered blockchain assistant
+      </p>
 
-          <p className="text-zinc-300">
-            Your wallet reputation is currently
-            <span className="font-semibold text-emerald-400">
-              {" "}
-              {analysis.rating}
-            </span>
-            .
-          </p>
+      <textarea
+        value={question}
+        onChange={(e) => setQuestion(e.target.value)}
+        placeholder="Ask Shadow AI..."
+        className="mt-6 h-32 w-full rounded-xl border border-white/10 bg-zinc-950 p-4 text-white outline-none"
+      />
 
-          <ul className="space-y-2 text-sm text-zinc-400">
-            <li>✓ {analysis.tokenCount} ERC20 tokens detected.</li>
-            <li>✓ {analysis.nftCount} NFTs detected.</li>
-            <li>✓ No suspicious activity found.</li>
-            <li>✓ Wallet is eligible for advanced analysis.</li>
-          </ul>
+      <button
+        className="mt-4 rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-white transition hover:bg-cyan-400"
+      >
+        Analyze
+      </button>
 
-        </div>
-      )}
+      <div className="mt-8 rounded-xl border border-cyan-500/20 bg-zinc-950 p-5">
+        <p className="text-zinc-300 leading-7">
+          {answer}
+        </p>
+      </div>
 
-    </Card>
+      <div className="mt-8 flex flex-wrap gap-3">
+        {suggestions.map((item) => (
+          <button
+            key={item}
+            onClick={() => setQuestion(item)}
+            className="rounded-full border border-white/10 px-4 py-2 text-sm text-zinc-400 transition hover:border-cyan-500 hover:text-white"
+          >
+            {item}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }

@@ -1,27 +1,52 @@
 "use client";
 
-import { useAccount } from "wagmi";
+import Gauge from "./Gauge";
+import useReputation from "@/hooks/useReputation";
 
 export default function ScoreCard() {
-  const { isConnected } = useAccount();
-
-  const score = isConnected ? 842 : "--";
+  const rep = useReputation();
 
   return (
     <div className="rounded-2xl border border-white/10 bg-zinc-900 p-8">
-      <p className="text-zinc-400">
+      <h2 className="text-xl font-semibold text-white">
         ShadowScore
-      </p>
+      </h2>
 
-      <h1 className="mt-4 text-7xl font-bold text-white">
-        {score}
-      </h1>
+      <div className="mt-8 flex justify-center">
+        <Gauge score={rep.score} />
+      </div>
 
-      <p className="mt-3 text-zinc-500">
-        {isConnected
-          ? "Wallet successfully analyzed."
-          : "Connect your wallet to begin analysis."}
-      </p>
+      <div className="mt-8 grid grid-cols-3 gap-4">
+        <div>
+          <p className="text-zinc-500 text-sm">
+            Grade
+          </p>
+
+          <p className="text-3xl font-bold text-cyan-400">
+            {rep.grade}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-zinc-500 text-sm">
+            Risk
+          </p>
+
+          <p className="text-3xl font-bold text-emerald-400">
+            {rep.risk}%
+          </p>
+        </div>
+
+        <div>
+          <p className="text-zinc-500 text-sm">
+            Status
+          </p>
+
+          <p className="text-lg font-semibold text-white">
+            {rep.status}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
