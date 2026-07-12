@@ -17,6 +17,8 @@ import ActivityTimeline from "@/components/dashboard/ActivityTimeline";
 import RecentTransactions from "@/components/dashboard/RecentTransactions";
 import RiskMeter from "@/components/dashboard/RiskMeter";
 import ScanAnimation from "@/components/dashboard/ScanAnimation";
+import ReputationBadge from "@/components/dashboard/ReputationBadge";
+import WalletComparison from "@/components/dashboard/WalletComparison";
 
 import useAnalysis from "@/hooks/useAnalysis";
 
@@ -46,6 +48,7 @@ export default function DashboardPage() {
           )}
 
           <WalletOverview />
+          <WalletComparison />
           <AIInsights />
 
           <SecurityScanner />
@@ -55,6 +58,7 @@ export default function DashboardPage() {
           <RiskMeter />
 
           <ReputationChart />
+          <ReputationBadge />
           <ReputationBreakdown />
 
           <ActivityTimeline />

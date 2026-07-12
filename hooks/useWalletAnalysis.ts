@@ -1,42 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
-import { analyzeWallet, WalletAnalysis } from "@/services/analyzer";
+import { useAccount, useBalance } from "wagmi";
+import { analyzeWallet } from "@/services/walletAnalysis";
 
 export default function useWalletAnalysis() {
-  const { address, isConnected } = useAccount();
 
-  const [loading, setLoading] = useState(false);
+  const { isConnected } = useAccount();
 
-  const [analysis, setAnalysis] = useState<WalletAnalysis>({
-    tokenCount: 0,
-    nftCount: 0,
-    score: 0,
-    rating: "Unknown",
-  });
+  const { data } = useBalance();
 
-  useEffect(() => {
-    if (!isConnected || !address) return;
+  const balance = Number(
+    data?.formatted ?? 0
+  );
 
-    async function load() {
-      setLoading(true);
-
-      try {
-        const result = await analyzeWallet(address);
-        setAnalysis(result);
-      } catch (error) {
-        console.error(error);
-      }
-
-      setLoading(false);
-    }
-
-    load();
-  }, [address, isConnected]);
-
-  return {
-    loading,
-    analysis,
-  };
+  return analyzeWallet(
+    balance,
+    isConnected
+  );
 }
